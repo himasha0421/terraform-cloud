@@ -33,30 +33,30 @@ provider "aws" {
 }
 
 # create a aws vpc
-module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
-  # To download the latest module, simply omit the version argument. 
-  # However, if you wanted a specific module version, you could list it as shown below.
-  # This version was released in 2023.
-  version            = "4.0.2"
-  name               = "bot-vpc"
-  azs                = var.azs
-  cidr               = var.vpc_cidr
-  public_subnets     = var.public_subnets
-  private_subnets    = var.private_subnets
-  enable_nat_gateway = true
-  tags = {
-    Name = "main"
-  }
-}
+# module "vpc" {
+#   source = "terraform-aws-modules/vpc/aws"
+#   # To download the latest module, simply omit the version argument. 
+#   # However, if you wanted a specific module version, you could list it as shown below.
+#   # This version was released in 2023.
+#   version            = "4.0.2"
+#   name               = "bot-vpc"
+#   azs                = var.azs
+#   cidr               = var.vpc_cidr
+#   public_subnets     = var.public_subnets
+#   private_subnets    = var.private_subnets
+#   enable_nat_gateway = true
+#   tags = {
+#     Name = "main"
+#   }
+# }
 
-resource "aws_instance" "bot-server" {
-  ami                    = "ami-0c7c4e3c6b4941f0f"
-  instance_type          = "t2.micro"
-  vpc_security_group_ids = [module.vpc.default_security_group_id]
-  subnet_id              = module.vpc.public_subnets[0]
+# resource "aws_instance" "bot-server" {
+#   ami                    = "ami-0c7c4e3c6b4941f0f"
+#   instance_type          = "t2.micro"
+#   vpc_security_group_ids = [module.vpc.default_security_group_id]
+#   subnet_id              = module.vpc.public_subnets[0]
 
-  tags = {
-    Name = "TC-triggered-instance"
-  }
-}
+#   tags = {
+#     Name = "TC-triggered-instance"
+#   }
+# }
