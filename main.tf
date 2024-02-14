@@ -19,6 +19,9 @@ terraform {
 # variable "aws_access_key" {}
 # variable "aws_secret_key" {}
 variable "region" {}
+variable "vpc_cidr" {}
+variable "public_subnets" {}
+variable "private_subnets" {}
 
 # provider arguments call on the variables which then call on terraform.tfvars for the values.
 provider "aws" {
@@ -28,11 +31,28 @@ provider "aws" {
   region = var.region
 }
 
-# Add .gitignore file in this directory with the terraform.tfvars
+# create a aws vpc
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+  # To download the latest module, simply omit the version argument. 
+  # However, if you wanted a specific module version, you could list it as shown below.
+  # This version was released in 2023.
+  version         = "4.0.2"
+  name            = "bot-vpc"
+  cidr            = var.vpc_cidr
+  public_subnets  = var.public_subnets
+  private_subnets = var.private_subnets
+  tags = {
+    Name = "main"
+  }
+}
 
-resource "aws_instance" "tc_instance" {
-  ami           = "ami-0c7c4e3c6b4941f0f"
-  instance_type = "t2.micro"
+
+resource "aws_instance" "bot-server" {
+  ami                    = "ami-0c7c4e3c6b4941f0f"
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [module.vpc.default_security_group_id]
+  subnet_id              = module.vpc.public_subnets[0]
 
   tags = {
     Name = "TC-triggered-instance"
