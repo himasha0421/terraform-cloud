@@ -22,6 +22,7 @@ variable "region" {}
 variable "vpc_cidr" {}
 variable "public_subnets" {}
 variable "private_subnets" {}
+variable "azs" {}
 
 # provider arguments call on the variables which then call on terraform.tfvars for the values.
 provider "aws" {
@@ -37,11 +38,13 @@ module "vpc" {
   # To download the latest module, simply omit the version argument. 
   # However, if you wanted a specific module version, you could list it as shown below.
   # This version was released in 2023.
-  version         = "4.0.2"
-  name            = "bot-vpc"
-  cidr            = var.vpc_cidr
-  public_subnets  = var.public_subnets
-  private_subnets = var.private_subnets
+  version            = "4.0.2"
+  name               = "bot-vpc"
+  azs                = var.azs
+  cidr               = var.vpc_cidr
+  public_subnets     = var.public_subnets
+  private_subnets    = var.private_subnets
+  enable_nat_gateway = true
   tags = {
     Name = "main"
   }
